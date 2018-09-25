@@ -23,7 +23,7 @@ Donate to the author of this program: 1GmQaG9R5NPs3ZzR6XPMD9jZk17F9MuoWn
 Installation: 
 
 ```
-$ git clone https://github.com/mobb111/rubygen
+$ git clone https://github.com/mobb111/rubygen-master
 
 $ cd rubygen
 
