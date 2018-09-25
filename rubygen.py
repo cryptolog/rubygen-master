@@ -213,83 +213,11 @@ def Rubygen():
             file.close()
 
             
-def put_dataset(queue):
-    while True:
-        if queue.qsize() > 100:
-            time.sleep(10)
-        else:
-            privatekey = privateKey()
-            publickey = publicKey(privatekey)
-            Address = address(publickey)
-            WIF = toWIF(privatekey)
-            dataset = (Address, privatekey, publickey, WIF)
-            queue.put(dataset, block = False)
-    return None
-
-def worker(queue):
-    time.sleep(1)
-    while True:
-        if queue.qsize() > 0:
-            dataset = queue.get(block = True)
-            balan = balance(dataset[0])
-            process_balance(dataset, balan)
-        else:
-            time.sleep(3)
-    return None
-
-def process_balance(dataset,balance):
-    if balance == -1 :
-        return None
-    elif balance == 0 :
-        print("{:<34}".format(str(dataset[0])) +  " = "  +  str(balance))
-        return None
-    else:
-        addr = dataset[0]
-        privatekey = dataset[1]
-        publickey = dataset[2]
-        WIF = dataset[3]
-        file = open("rubygen.txt","a")
-        file.write("address: " + str(addr) + "\n" +
-                   "private key: " + str(privatekey) + "\n" +
-                   "WIF private key: " + str(WIF) + "\n" +
-                   "public key: " + str(publickey).upper() + "\n" +
-                   "balance: " + str(balance) + "\n" +
-                   "Donate to the author of this program: 1GmQaG9R5NPs3ZzR6XPMD9jZk17F9MuoWn\n\n")
-        file.close()
-    return None
-
-def multi():
-    processes = []
-    dataset = queue()
-    datasetProducer = Process(target = put_dataset, args = (dataset,))
-    datasetProducer.daemon = True
-    processes.append(datasetProducer)
-    datasetProducer.start()
-    for core in range(4):
-        work = Process(target = worker, args = (dataset,))
-        work.deamon = True
-        processes.append(work)
-        work.start()
-    try:
-        datasetProducer.join()
-    except KeyboardInterrupt:
-        for process in processes:
-            process.terminate()
-        print('\n\n------------------------\nALL PROCESSES TERMINATED\n')
-
-
-def main():
-    if ("-m" in sys.argv):
-        print("\n-------- MULTIPROCESSING MODE ACTIVATED --------\n")
-        time.sleep(3)
-        print("\n  |--------- Wallet Address ---------||-------------------- Private Key -------------------|--== Balance--- |-Made by Ano.Mobb-| ")
-        multi()
-    else:
-        print("\n  |--------- Wallet Address ---------||-------------------- Private Key -------------------|--== Balance--- |-Made by Ano.Mobb-| ")
-        Rubygen()
+print("\n  |--------- Wallet Address ---------||-------------------- Private Key -------------------|--== Balance--- |-Made by Ano.Mobb-| ")
+        
 
 if __name__ == '__main__':
-    main()
+    Rubygen()
 
 
 
