@@ -111,9 +111,7 @@ def list3(BIP39):
 
 
 def privateKey(list2):
-    secret_e = (base64.b64encode(hashlib.sha512(str(list2) + '$6$').digest()))
-    privatekey = hashlib.sha256(binascii.hexlify(secret_e)).hexdigest()
-    print secret_e
+    privatekey = hashlib.sha256(binascii.hexlify(str(list2))).hexdigest()
     return privatekey
 
 
@@ -218,6 +216,8 @@ print("\n  |--------- Wallet Address ---------||-------------------- Private Key
 
 if __name__ == '__main__':
     Rubygen()
+
+
 
 
 
