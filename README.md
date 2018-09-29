@@ -37,6 +37,19 @@ $ pip install -r requirements.txt
 $ cd rubygen
 
 $ python rubygen.py
+
+New function added:
+
+Enter number of passphrase
+Select your API:
+1) Bitcoinlegacy Blockexplorer
+2) Blockchain
+3) Blockexplorer
+4) Bitpay
+
+
+
+
 ```
 <br>
 
