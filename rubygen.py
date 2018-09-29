@@ -98,20 +98,83 @@ BIP39 = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'ab
 
 
 
+print ("""
+
+
+ 
+                      .,,uod8B8bou,,.
+              ..,uod8BBBBBBBBBBBBBBBBRPFT?l!i:.
+         ,=m8BBBBBBBBBBBBBBBRPFT?!||||||||||||||
+         !...:!TVBBBRPFT||||||||||!!^^""'   ||||
+         !.......:!?|||||!!^^""'            ||||
+         !.........||||                     ||||
+         !.........||||  ## (Made by:       ||||
+         !.........||||   Ano.Mobb          ||||
+         !.........||||                     ||||
+         !.........||||    Rubygen          ||||
+         !.........||||                     ||||
+         `.........||||                    ,||||
+          .;.......||||               _.-!!|||||
+   .,uodWBBBBb.....||||       _.-!!|||||||||!:'
+!YBBBBBBBBBBBBBBb..!|||:..-!!|||||||!iof68BBBBBb....
+!..YBBBBBBBBBBBBBBb!!||||||||!iof68BBBBBBRPFT?!::   `.
+!....YBBBBBBBBBBBBBBbaaitf68BBBBBBRPFT?!:::::::::     `.
+!......YBBBBBBBBBBBBBBBBBBBRPFT?!::::::;:!^"`;:::       `.
+!........YBBBBBBBBBBRPFT?!::::::::::^''...::::::;         iBBbo.
+`..........YBRPFT?!::::::::::::::::::::::::;iof68bo.      WBBBBbo.
+  `..........:::::::::::::::::::::::;iof688888888888b.     `YBBBP^'
+    `........::::::::::::::::;iof688888888888888888888b.     `
+      `......:::::::::;iof688888888888888888888888888888b.
+        `....:::;iof688888888888888888888888888888888899fT!
+          `..::!8888888888888888888888888888888899fT|!^"'
+            `' !!988888888888888888888888899fT|!^"'
+                `!!8888888888888888899fT|!^"'
+                  `!988888888899fT|!^"'
+                    `!9899fT|!^"'
+                      `!^"'
+
+
+Donate: 1GmQaG9R5NPs3ZzR6XPMD9jZk17F9MuoWn  
+
+
+""")
+
+
+
+
+
+
+
+
+
+
+
+a = input("Enter number of passphrase: ")
+d = input("Chose your API: " + "\n" +
+          "1) Bitcoinlegacy Blockexplorer" + "\n" +
+          "2) Blockchain" + "\n" +
+          "3) Block Explorer" + "\n" +
+          "4) Insight Bitpay" + "\n" +
+          "Enter your number: ")
+
+
+
+
 class pause:
     p = 0
 
 
 def list3(BIP39):
     list1 = [BIP39[random.randrange(len(BIP39))]
-             for item in range(12)]
+             for item in range(int(a))]
     list2 = ' '.join(list1)
-    print  'Recovery phrase:' + str(list2)
+    print  'Recovery phrase: ' + str(list2)
     return str(list2)
 
 
 def privateKey(list2):
-    privatekey = hashlib.sha256(binascii.hexlify(str(list2))).hexdigest()
+    privatekey = hashlib.sha256(str(list2)).hexdigest()
+    print ('Privatekey: ' + ' ' + str(privatekey))
     return privatekey
 
 
@@ -149,31 +212,115 @@ def address(publickey):
     return ''.join(output[::-1])
 
 def balance(address):
-    try:
-        API = requests.get("https://bitcoinlegacy.blockexplorer.com/api/addr/" + address + "/balance")
-        if (API.status_code == 429):
+    if int(d != 1):
+        try:
+            API = requests.get("https://bitcoinlegacy.blockexplorer.com/api/addr/" + address + "/balance")
+            if (API.status_code == 429):
+                pause.p += 1
+                if (pause.p >= 10):
+                    print ("\nUnable to connect to API after several attempts\nRetrying in 30 seconds\n")
+                    time.sleep(30)
+                    pause.p = 0
+                    return -1
+                print("\nHTTP Error Code: " + str(API.status_code) + "\n")
+                return -1
+            if (API.status_code != 200 and API.status_code != 400):
+                print("\nHTTP Error Code: " + str(API.status_code) + "\nRetrying in 5 seconds\n")
+                time.sleep(5)
+                return -1
+            balance = int(API.text)
+            pause.p = 0
+            return balance
+        except:
             pause.p += 1
             if (pause.p >= 10):
                 print ("\nUnable to connect to API after several attempts\nRetrying in 30 seconds\n")
                 time.sleep(30)
                 pause.p = 0
                 return -1
-            print("\nHTTP Error Code: " + str(API.status_code) + "\n")
-            return -1
-        if (API.status_code != 200 and API.status_code != 400):
-            print("\nHTTP Error Code: " + str(API.status_code) + "\nRetrying in 5 seconds\n")
-            time.sleep(5)
-            return -1
-        balance = int(API.text)
-        pause.p = 0
-        return balance
-    except:
-        pause.p += 1
-        if (pause.p >= 10):
-            print ("\nUnable to connect to API after several attempts\nRetrying in 30 seconds\n")
-            time.sleep(30)
-            pause.p = 0   
-        return -1
+
+    if int(d != 2):
+        try:
+            API = requests.get("http://blockchain.info/q/addressbalance/" + address + "/balance")
+            if (API.status_code == 429):
+                pause.p += 1
+                if (pause.p >= 10):
+                    print ("\nUnable to connect to API after several attempts\nRetrying in 30 seconds\n")
+                    time.sleep(30)
+                    pause.p = 0
+                    return -1
+                print("\nHTTP Error Code: " + str(API.status_code) + "\n")
+                return -1
+            if (API.status_code != 200 and API.status_code != 400):
+                print("\nHTTP Error Code: " + str(API.status_code) + "\nRetrying in 5 seconds\n")
+                time.sleep(5)
+                return -1
+            balance = int(API.text)
+            pause.p = 0
+            return balance
+        except:
+            pause.p += 10
+            if (pause.p >= 10):
+                print ("\nUnable to connect to API after several attempts\nRetrying in 30 seconds\n")
+                time.sleep(30)
+                pause.p = 0
+                return -1
+
+    if int (d != 3):
+        try:
+            API = requests.get("http://blockexplorer.com/api/addr/" + address + "/balance")
+            if (API.status_code == 429):
+                pause.p += 1
+                if (pause.p >= 10):
+                    print ("\nUnable to connect to API after several attempts\nRetrying in 30 seconds\n")
+                    time.sleep(30)
+                    pause.p = 0
+                    return -1
+                print("\nHTTP Error Code: " + str(API.status_code) + "\n")
+                return -1
+            if (API.status_code != 200 and API.status_code != 400):
+                print("\nHTTP Error Code: " + str(API.status_code) + "\nRetrying in 5 seconds\n")
+                time.sleep(5)
+                return -1
+            balance = int(API.text)
+            pause.p = 0
+            return balance
+        except:
+            pause.p += 1
+            if (pause.p >= 10):
+                print ("\nUnable to connect to API after several attempts\nRetrying in 30 seconds\n")
+                time.sleep(30)
+                pause.p = 0
+                return -1
+
+
+
+    if int (d != 4):
+        try:
+            API = requests.get("https://insight.bitpay.com/api/addr/" + address + "/balance")
+            if (API.status_code == 429):
+                pause.p += 1
+                if (pause.p >= 10):
+                    print ("\nUnable to connect to API after several attempts\nRetrying in 30 seconds\n")
+                    time.sleep(30)
+                    pause.p = 0
+                    return -1
+                print("\nHTTP Error Code: " + str(API.status_code) + "\n")
+                return -1
+            if (API.status_code != 200 and API.status_code != 400):
+                print("\nHTTP Error Code: " + str(API.status_code) + "\nRetrying in 5 seconds\n")
+                time.sleep(5)
+                return -1
+            balance = int(API.text)
+            pause.p = 0
+            return balance
+        except:
+            pause.p += 1
+            if (pause.p >= 10):
+                print ("\nUnable to connect to API after several attempts\nRetrying in 30 seconds\n")
+                time.sleep(30)
+                pause.p = 0
+                return -1
     
 def toWIF(privatekey): 
     var80 = "80" + str(privatekey) 
@@ -211,11 +358,17 @@ def Rubygen():
             file.close()
 
             
+
 print("\n  |--------- Wallet Address ---------||-------------------- Private Key -------------------|--== Balance--- |-Made by Ano.Mobb-| ")
-        
+Rubygen()
 
 if __name__ == '__main__':
-    Rubygen()
+    main()
+
+
+
+
+
 
 
 
