@@ -41,6 +41,9 @@ $ python rubygen.py
 New function added:
 
 Enter number of passphrase
+
+
+
 Select your API:
 1) Bitcoinlegacy Blockexplorer
 2) Blockchain
